@@ -19,7 +19,6 @@ const config: Array<CardItem> = [{
 interface IProps { }
 const ConfigCard: React.FC<IProps> = (props) => {
     return <>{config.map((item: CardItem, index: number) => {
-        console.log(item, index)
         return <div className='card-item' key={item.name}>
             <div className="card">
                 <div className='icon'>{item.icon}</div>

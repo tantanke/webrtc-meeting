@@ -1,7 +1,5 @@
 .home-container {
-  width: 100vw;
-  height: 100vh;
-  background: url(https://sf3-cn.feishucdn.com/obj/goofy/byteview/vc/static/images/bg2x-4cab3ca628edef105e681d0891459497.jpg) no-repeat center center fixed;
+  width: 100%;
   .icon{
     background: url(../../images/icon.png) no-repeat center center fixed;
     width: 40px;
@@ -9,26 +7,7 @@
     display: inline-block;
     z-index: 1000;
   }
-  .home-topbar {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    padding-top: 16px;
-    .home-topbar-left{
-      margin-left: 200px;
-      .icon-title{
-        margin-left: 16px;
-        font-size: 20px;
-        font-weight: 600;
-      }
-    }
-    .home-topbar-right{
-      margin-right: 200px;
-      display: flex;
-      align-items: center;
-    }
-   
-  }
+ 
 
 
   .home-footer {
@@ -41,4 +20,24 @@
     position: absolute;
     bottom: 7px;
   }
+}
+.home-topbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 16px;
+  .home-topbar-left{
+    margin-left: 200px;
+    .icon-title{
+      margin-left: 16px;
+      font-size: 20px;
+      font-weight: 600;
+    }
+  }
+  .home-topbar-right{
+    margin-right: 200px;
+    display: flex;
+    align-items: center;
+  }
+ 
 }

@@ -19,6 +19,7 @@ export default defineConfig({
       routes: [
         { path: '/', redirect: '/home' },
         { exact: true, path: '/home', component: '@/pages/home' },
+        { exact: true, path: '/join', component: '@/pages/join' },
       ],
     },
   ],
