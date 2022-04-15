@@ -1,51 +1,33 @@
 import React, { useState } from 'react'
 import './index.less'
-import { Button, Modal } from '@arco-design/web-react';
+import LoginButtons from './components/loginAndRes'
+import MeetingConfig from './components/MeetingConfig'
 type Props = {}
 
 export default function HomePage({ }: Props) {
-  const [regisVisible, setRegisVisible] = useState(false);
-  const [loginVisible, setLoginVisible] = useState(false);
   return (
     <div className='home-container'>
       <div className='home-topbar'>
-        <div className="home-topbar-left">logo</div>
-        <div className="home-topbar-rigth">
-          <Button type="primary" onClick={() => {
-            setLoginVisible(true)
-          }}>登录</Button>
-          <Modal
-            title='登录账号'
-            visible={loginVisible}
-            onOk={() => setLoginVisible(false)}
-            onCancel={() => setLoginVisible(false)}
-            autoFocus={false}
-            focusLock={true}
-          >
-            <p>
-              You can customize modal body text by the current situation. This modal will be closed
-              immediately once you press the OK button.
-            </p>
-          </Modal>
-          <Button type="primary" onClick={() => {
-            setRegisVisible(true)
-          }}>注册</Button>
-          <Modal
-            title='注册账号'
-            visible={regisVisible}
-            onOk={() => setRegisVisible(false)}
-            onCancel={() => setRegisVisible(false)}
-            autoFocus={false}
-            focusLock={true}
-          >
-            <p>
-              注册
-            </p>
-          </Modal>
+        <div className="home-topbar-left">
+          <img style={{
+            width: 60,
+            height: 60
+          }} src="https://s1.ax1x.com/2022/04/15/L3WBlT.png" alt="" />
+          <span className='icon-title'>基于WebRTC的在线视频会议系统</span>
+        </div>
+        <div className="home-topbar-right">
+          <LoginButtons></LoginButtons>
         </div>
       </div>
-      <div className='home-main'></div>
-      <div className='home-footer'></div>
+      <div className='home-main'>
+        <MeetingConfig></MeetingConfig>
+      </div>
+      <div className='home-footer'>
+        <div>CopyRight@西南石油大学-谭达科</div>
+        <div style={{
+          marginTop: 6
+        }}>特别鸣谢@西南石油大学-肖斌</div>
+      </div>
     </div>
   )
 }

@@ -1,15 +1,4 @@
-# umi project
+# 在线视频会议
+功能
 
-## Getting Started
-
-Install dependencies,
-
-```bash
-$ yarn
-```
-
-Start the dev server,
-
-```bash
-$ yarn start
-```
+登录，注册
