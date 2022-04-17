@@ -10,12 +10,6 @@ export default function HomePage({ }: Props) {
       <div className='home-main'>
         <MeetingConfig></MeetingConfig>
       </div>
-      <div className='home-footer'>
-        <div>CopyRight@西南石油大学-谭达科</div>
-        <div style={{
-          marginTop: 6
-        }}>特别鸣谢@西南石油大学-肖斌</div>
-      </div>
     </div>
   )
 }

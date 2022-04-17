@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import './index.less'
+import { useMemoizedFn } from 'ahooks';
 import { Input } from '@arco-design/web-react';
 import { ReactComponent as MicroIcon } from '@/images/micro.svg'
 import { ReactComponent as NoMicroIcon } from '@/images/no-micro.svg'
 import { ReactComponent as VideoIcon } from '@/images/video.svg'
 import { ReactComponent as NoVideoIcon } from '@/images/no-video.svg'
+import { history } from 'umi';
 import { getLocalPreviewAndInitRoomConnection } from '@/utils/webRTCHandler'
 import { Button } from '@arco-design/web-react';
 interface IProps { }
@@ -20,15 +22,17 @@ const JoinPage: React.FC<IProps> = (props) => {
             videosContainer ? videosContainer.remove() : ''
         }
     }, [])
-
+    const onCreateMeeting = useMemoizedFn(() => {
+        history.push('/room');
+    })
     return (
         <div className='join-container'>
-            <h1 className='join-title'>加入会议</h1>
+            <h1 className='join-title'>创建会议</h1>
             <div className="join-info">
                 <div className='join-info-item'><Input
                     style={{ width: 350 }}
                     allowClear
-                    placeholder='会议号'
+                    placeholder='会议主题'
                 /></div>
                 <div className='join-info-item'>  <Input
                     style={{ width: 350 }}
@@ -45,7 +49,7 @@ const JoinPage: React.FC<IProps> = (props) => {
                 <div className='icon-item'> {disabledVideo ? <NoVideoIcon style={{
                     color: '#f54a45'
                 }} /> : <VideoIcon />}</div>
-                <Button type='outline' disabled>立刻加入</Button>
+                <Button type='outline' onClick={onCreateMeeting} /* disabled={canJoinValue} */>立刻创建</Button>
             </div>
         </div>
     )

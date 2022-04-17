@@ -5,14 +5,10 @@ export default defineConfig({
     type: 'none',
   },
   routes: [
-  /*   {
-      path: '/tab',
-      component: '@/layouts/index',
-      routes: [
-        { path: '/tab', redirect: '/tab/home' },
-        { exact: true, path: '/tab/home', component: '@/pages/home' },
-      ],
-    }, */
+    {
+      path: '/room',
+      component: '@/pages/room',
+    },
     {
       path: '/',
       component: '@/layouts/index',
@@ -20,6 +16,8 @@ export default defineConfig({
         { path: '/', redirect: '/home' },
         { exact: true, path: '/home', component: '@/pages/home' },
         { exact: true, path: '/join', component: '@/pages/join' },
+        { exact: true, path: '/create', component: '@/pages/create' },
+        { exact: true, path: '/end', component: '@/pages/end' },
       ],
     },
   ],
