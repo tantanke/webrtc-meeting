@@ -1,0 +1,90 @@
+#meeting-inner {
+  .arco-dropdown {
+    top: 42px !important;
+    left: 12px !important;
+
+    .arco-dropdown-menu {
+      background-color: #2b2f36;
+      border: none;
+
+      .item-title {
+        color: #8f959e
+      }
+
+      .item-info {
+        color: #ffffff;
+      }
+    }
+  }
+}
+
+.room-page-content {
+  color: #ffffff;
+  background-color: #1f2329;
+  width: 100vw;
+  height: 100vh;
+  font-family: LarkEmojiFont, LarkChineseQuote, -apple-system, BlinkMacSystemFont, Helvetica Neue, Tahoma, PingFang SC, Microsoft Yahei, Arial, Hiragino Sans GB, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+
+  .room-wrapper {
+    height: 100vh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+width: 100vw;
+    .room-page-title {
+      position: relative;
+      height: 40px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      background: #1f2329;
+      font-size: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+      box-sizing: border-box;
+
+      .room-page-inner {
+          display: flex;
+          justify-content: space-between;
+          width: 100%;
+        .room-page-inner-left {
+          display: flex;
+          align-items: center;
+          min-width: 300px;
+          height: 100%;
+          flex: 1 1 auto;
+          overflow: hidden;
+          color: #ffffff;
+
+          .dropdown-demo>.arco-btn {
+            padding: 0 8px;
+            font-weight: normal;
+          }
+
+          .dropdown-demo .arco-dropdown-popup-visible .arco-icon-down {
+            transform: rotate(180deg);
+          }
+
+          .meeting-id {
+            display: inline-block;
+            cursor: pointer;
+            font-weight: 600;
+            margin-left: 30px;
+            background-color: transparent;
+            color: rgba(248, 249, 250, 0.8);
+          }
+        }
+
+        .room-page-inner-right {
+          display: flex;
+          min-width: 280px;
+          flex: 0 0 auto;
+          align-items: center;
+          justify-content: flex-end;
+        }
+      }
+
+
+
+    }
+  }
+}
