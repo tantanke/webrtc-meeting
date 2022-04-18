@@ -4,6 +4,9 @@ import MeetingTimer from './components/timer';
 import { IconDown } from '@arco-design/web-react/icon';
 import MeetingMain from './components/main'
 import {
+    RecoilRoot,
+  } from 'recoil';
+import {
   Tooltip,
   Tag,
   Typography,
@@ -47,6 +50,7 @@ const options = [
 interface IProps {}
 const Room: React.FC<IProps> = (props) => {
   return (
+    <RecoilRoot>
     <div id="meeting-inner">
       <div className="room-page-content">
         <div className="room-wrapper">
@@ -104,6 +108,7 @@ const Room: React.FC<IProps> = (props) => {
         </div>
       </div>
     </div>
+    </RecoilRoot>
   );
 };
 export default Room;

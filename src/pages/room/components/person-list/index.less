@@ -1,0 +1,69 @@
+.join-person-title {
+  padding: 0 12px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.person-list {
+  padding: 0 12px;
+  margin-top: 12px;
+
+  .person-list-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 24px;
+
+    .info {
+      .name {
+        display: inline-block;
+        color: #ffffff;
+        position: relative;
+
+        .isOwner {
+          position: absolute;
+        }
+      }
+
+      .avatar {
+        border-radius: 50%;
+        display: inline-block;
+        width: 32px;
+        height: 32px;
+        line-height: 32px;
+        text-align: center;
+        margin-right: 14px;
+        font-size: 10px;
+        color: #ffffff
+      }
+    }
+
+    .icons {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      .icon-item {
+        transition-property: all;
+        transition-duration: 0.15s;
+        transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 0.1);
+        transition-delay: 0s;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        &:hover {
+          background-color: rgba(227, 231, 238, 0.2);
+        }
+      }
+
+      .no-icon {
+        width: 18px;
+        fill: #f54a45;
+        height: 18px;
+        cursor: pointer;
+      }
+    }
+  }
+}
