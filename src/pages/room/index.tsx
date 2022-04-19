@@ -97,7 +97,9 @@ const Room: React.FC<IProps> = (props) => {
                       );
                     })}
                   </Space>
+                  <div className="room-page-inner-name">tandake会议测试</div>
                 </div>
+               
                 <div className="room-page-inner-right">
                   <MeetingTimer></MeetingTimer>
                 </div>

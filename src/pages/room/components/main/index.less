@@ -6,7 +6,54 @@
   .meeting-main-left {
     flex: 1;
     background-color: #0c0e10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
 
+    .video_screen_share_preview_small {
+      position: fixed;
+      left: 400px;
+      bottom: -15px;
+      video {
+        width: 140px;
+        height: 110px;
+      }
+    }
+
+    .no-video-logo {
+      width: 200px;
+      height: 200px;
+      line-height: 200px;
+      text-align: center;
+      border-radius: 50%;
+      font-size: 50px;
+    }
+
+    .meeting-main-talking {
+      position: absolute;
+      right: 12px;
+      top: 20px;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      width: 160px;
+      height: 32px;
+      padding: 0 12px;
+      border-radius: 6px;
+      background-color: rgba(55, 60, 67, 0.8);
+      font-size: 12px;
+      word-break: keep-all;
+      border: 1px solid transparent;
+      line-height: 1.5;
+      color: rgba(248, 249, 250, 0.6);
+      font-weight: 500;
+      margin-right: 4px;
+    }
+
+    .videos_portal_styles_main {
+      margin: 0px auto;
+    }
   }
 
   .meeting-main-right {
@@ -19,6 +66,6 @@
     background-color: #1f2329;
     color: rgba(248, 249, 250, 0.6);
     border-left: 1px solid rgba(255, 255, 255, 0.16);
-   
+
   }
 }
