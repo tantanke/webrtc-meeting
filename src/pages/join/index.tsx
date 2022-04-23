@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import './index.less';
-import { Input } from '@arco-design/web-react';
+import { UserColors } from '@/const';
+import { Input, Message } from '@arco-design/web-react';
 import { ReactComponent as MicroIcon } from '@/images/micro.svg';
 import { ReactComponent as NoMicroIcon } from '@/images/no-micro.svg';
 import { ReactComponent as VideoIcon } from '@/images/video.svg';
 import { ReactComponent as NoVideoIcon } from '@/images/no-video.svg';
-import { Button } from '@arco-design/web-react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { showMeMicro, showMeVideo, MeetNumber } from '@/store/index';
+import { Button, Spin } from '@arco-design/web-react';
+import { useRecoilValue, useSetRecoilState,} from 'recoil';
+import {
+  showMeMicro,
+  showMeVideo,
+} from '@/store/index';
+import { history } from 'umi';
+import { useMemoizedFn, useTimeout } from 'ahooks';
 interface IProps {}
 const defaultConstraints: any = {
   audio: true,
@@ -60,8 +66,9 @@ const JoinPage: React.FC<IProps> = (props) => {
   const showMeVideoValue = useRecoilValue<boolean>(showMeVideo);
   const setShowMeVideoValue = useSetRecoilState<boolean>(showMeVideo);
   const setShowMeMicroValue = useSetRecoilState<boolean>(showMeMicro);
-  const meetNumberValue = useRecoilValue<string>(MeetNumber);
-  const setMeetNumberValue = useSetRecoilState<string>(MeetNumber);
+  const [mainLoadingValue, setMainLoadingValue] = useState<boolean>(false);
+  const [userName, setUserName] = useState('');
+  const [meetingID, setMeetingID] = useState('');
   useEffect(() => {
     getLocalPreviewAndInitRoomConnection();
     return () => {
@@ -69,76 +76,100 @@ const JoinPage: React.FC<IProps> = (props) => {
       videosContainer ? videosContainer.remove() : '';
     };
   }, []);
-
+  const color = UserColors[Math.ceil(Math.random() * 10)];
+  const onCreateMeeting = useMemoizedFn(() => {
+    const data = JSON.parse(localStorage.getItem('meetingInfo') || '{}');
+    if (data && data[meetingID]) {
+      setMainLoadingValue(true);
+      setTimeout(() => {
+        history.push(
+          `/room?name=${userName}&host=${false}&topic=${
+            data[meetingID].name
+          }&id=${meetingID}&order=1&color=${color}`,
+        );
+        setMainLoadingValue(false);
+      }, 1000);
+    } else {
+      Message.warning('请输入正确的九位数会议号！');
+    }
+  });
   return (
-    <div className="join-container">
-      <h1 className="join-title">加入会议</h1>
-      <div className="join-info">
-        <div className="join-info-item">
-          <Input
-            onChange={(v) => {
-              setMeetNumberValue(v);
+    <Spin style={{
+      width:'100vw'
+    }} dot loading={mainLoadingValue}>
+      <div className="join-container">
+        <h1 className="join-title">加入会议</h1>
+        <div className="join-info">
+          <div className="join-info-item">
+            <Input
+              onChange={(v) => {
+                setMeetingID(v);
+              }}
+              style={{ width: 580 }}
+              allowClear
+              placeholder="会议号"
+            />
+          </div>
+          <div className="join-info-item">
+            <Input
+              style={{ width: 580 }}
+              allowClear
+              placeholder="昵称(默认为用户名)"
+              onChange={(v) => {
+                setUserName(v);
+              }}
+            />
+          </div>
+        </div>
+        <div id="videos_portal"></div>
+        <div className="video-icons">
+          <div
+            className="icon-item"
+            onClick={() => {
+              setShowMeMicroValue(!showMeMicroValue);
             }}
-            style={{ width: 580 }}
-            allowClear
-            placeholder="会议号"
-          />
-        </div>
-        <div className="join-info-item">
-          <Input
-            style={{ width: 580 }}
-            allowClear
-            placeholder="昵称(默认为用户名)"
-          />
+          >
+            {!showMeMicroValue ? (
+              <NoMicroIcon
+                style={{
+                  color: '#f54a45',
+                }}
+              />
+            ) : (
+              <MicroIcon />
+            )}
+          </div>
+          <div
+            className="icon-item"
+            onClick={() => {
+              if (showMeVideoValue && localStream) {
+                localStream.getVideoTracks()[0].enabled = false;
+              } else if (!showMeVideoValue && localStream) {
+                localStream.getVideoTracks()[0].enabled = true;
+              }
+              setShowMeVideoValue(!showMeVideoValue);
+            }}
+          >
+            {!showMeVideoValue ? (
+              <NoVideoIcon
+                style={{
+                  color: '#f54a45',
+                }}
+              />
+            ) : (
+              <VideoIcon />
+            )}
+          </div>
+          <Button
+            type="outline"
+            onClick={onCreateMeeting}
+            /*  disabled={meetNumberValue.length === 9 ? false : true} */
+          >
+            立刻加入
+          </Button>
         </div>
       </div>
-      <div id="videos_portal"></div>
-      <div className="video-icons">
-        <div
-          className="icon-item"
-          onClick={() => {
-            setShowMeMicroValue(!showMeMicroValue);
-          }}
-        >
-          {!showMeMicroValue ? (
-            <NoMicroIcon
-              style={{
-                color: '#f54a45',
-              }}
-            />
-          ) : (
-            <MicroIcon />
-          )}
-        </div>
-        <div
-          className="icon-item"
-          onClick={() => {
-            if (showMeVideoValue && localStream) {
-              localStream.getVideoTracks()[0].enabled = false;
-            } else if (!showMeVideoValue && localStream) {
-              localStream.getVideoTracks()[0].enabled = true;
-            }
-            setShowMeVideoValue(!showMeVideoValue);
-          }}
-        >
-          {!showMeVideoValue ? (
-            <NoVideoIcon
-              style={{
-                color: '#f54a45',
-              }}
-            />
-          ) : (
-            <VideoIcon />
-          )}
-        </div>
-        <Button
-          type="outline"
-          disabled={meetNumberValue.length < 9 ? true : false}
-        >
-          立刻加入
-        </Button>
-      </div>
-    </div>
+    </Spin>
   );
 };
 export default JoinPage;

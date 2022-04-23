@@ -5,38 +5,15 @@ import { IconDown } from '@arco-design/web-react/icon';
 import MeetingMain from './components/main';
 import { RecoilRoot } from 'recoil';
 import { history } from 'umi';
-import { getRandom } from '@/utils/getRandom';
 import {
   Tooltip,
   Tag,
+  Typography,
   Dropdown,
   Menu,
   Button,
   Space,
 } from '@arco-design/web-react';
-const query: any = history.location.query;
-const dropList = (
-  <Menu>
-    <Menu.Item key="name">
-      <span className="item-title">会议主题： </span>
-      <span className="item-info">{query.topic}</span>
-    </Menu.Item>
-    <Menu.Item key="id">
-      <span className="item-title">会议ID： </span>
-      <span className="item-info">{query.id}</span>
-    </Menu.Item>
-    <Menu.Item key="copy">
-      <Button
-        style={{
-          width: '100%',
-        }}
-        size="small"
-      >
-        复制入会信息
-      </Button>
-    </Menu.Item>
-  </Menu>
-);
 const options = [
   {
     color: 'arcoblue',
@@ -47,45 +24,59 @@ const options = [
 ];
 interface IProps {}
 const Room: React.FC<IProps> = (props) => {
+  const querys: any = history.location.query;
+  const dropList = (
+    <Menu
+      style={{
+        pointerEvents: 'none',
+      }}
+    >
+      <Menu.Item key="name">
+        <span className="item-title">会议主题： </span>
+        <span className="item-info">{querys.topic}</span>
+      </Menu.Item>
+      <Menu.Item key="id">
+        <span className="item-title">会议ID： </span>
+        <span className="item-info">{querys.id}</span>
+      </Menu.Item>
+    </Menu>
+  );
   useEffect(() => {
     let meetings: any = JSON.parse(localStorage.getItem('meetingInfo') || '{}');
-    const meetingFlag = JSON.parse(localStorage.getItem('meetingFlag') || '{}');
-    if (query?.host === 'true') {
-      !meetingFlag[query.id] && (meetingFlag[query.id] = {});
-      !meetings[query.id] &&
-        (
-          meetings[query.id] = {
-          id: query.id,
-          name: query.topic,
-          owner: query.name,
+    let meetingFlag = JSON.parse(localStorage.getItem('meetingFlag') || '{}');
+    if (querys?.host === 'true') {
+      !meetingFlag[querys.id] && (meetingFlag[querys.id] = {});
+      !meetings[querys.id] &&
+        (meetings[querys.id] = {
+          id: querys.id,
+          name: querys.topic,
+          owner: querys.name,
           personList: [
             {
-              name: query.name,
-              color: query.color,
+              name: querys.name,
+              color: querys.color,
               isOwner: true,
               video: false,
               micro: false,
             },
           ],
         });
-    } else if (query?.host === 'false') {
-      console.log(99090);
-      !meetingFlag[query.id] && (meetingFlag[query.id] = {});
-      !meetingFlag[query.id][query.name] &&
-        (meetings[query.id].personList = [
-          ...meetings[query.id].personList,
+    } else if (querys?.host === 'false') {
+      !meetingFlag[querys.id] && (meetingFlag[querys.id] = {});
+      !meetingFlag[querys.id][querys.name] &&
+        (meetings[querys.id].personList = [
+          ...meetings[querys.id].personList,
           {
-            name: query?.name,
-            color: query?.color,
+            name: querys?.name,
+            color: querys?.color,
             isOwner: false,
             video: false,
             micro: false,
           },
         ]);
-      console.log(meetings[query.id].personList, query?.name);
     }
-
-    meetingFlag[query.id][query?.name] = true;
+    console.log(querys.id, querys?.name);
+    meetingFlag[querys.id][querys?.name] = true;
     localStorage.setItem('meetingFlag', JSON.stringify(meetingFlag));
     localStorage.setItem('meetingInfo', JSON.stringify(meetings));
   }, []);
@@ -102,9 +93,12 @@ const Room: React.FC<IProps> = (props) => {
               <div className="room-page-title">
                 <div className="room-page-inner">
                   <div className="room-page-inner-left">
-                    <Tooltip mini content="复制入会信息">
-                      <span className="meeting-id">ID: {query.id.replace(/(.{3})/g,'$1 ')}</span>
-                    </Tooltip>
+                    <span className="meeting-id-inner">
+                      ID：
+                      <Typography.Paragraph copyable className="meeting-id">
+                        <span>{querys.id}</span>
+                      </Typography.Paragraph>
+                    </span>
                     <Dropdown
                       getPopupContainer={() => {
                         return document.getElementById('meeting-inner')!;
@@ -139,7 +133,7 @@ const Room: React.FC<IProps> = (props) => {
                         );
                       })}
                     </Space>
-                    <div className="room-page-inner-name">{query.topic}</div>
+                    <div className="room-page-inner-name">{querys.topic}</div>
                   </div>
 
                   <div className="room-page-inner-right">

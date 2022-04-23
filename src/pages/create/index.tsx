@@ -10,7 +10,7 @@ import { ReactComponent as NoVideoIcon } from '@/images/no-video.svg';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { showMeMicro, showMeVideo, MeetingName } from '@/store/index';
 import { history } from 'umi';
-import { Button } from '@arco-design/web-react';
+import { Button, Spin } from '@arco-design/web-react';
 import { getRandom } from '@/utils/getRandom';
 const defaultConstraints: any = {
   audio: true,
@@ -69,6 +69,7 @@ const JoinPage: React.FC<IProps> = (props) => {
   const meetingNameValue = useRecoilValue<string>(MeetingName);
   const setMeetingNameValue = useSetRecoilState<string>(MeetingName);
   const [userName, setUserName] = useState('');
+  const [mainLoadingValue, setMainLoadingValue] = useState<boolean>(false);
   useEffect(() => {
     getLocalPreviewAndInitRoomConnection();
     return () => {
@@ -77,84 +78,96 @@ const JoinPage: React.FC<IProps> = (props) => {
     };
   }, []);
   const onCreateMeeting = useMemoizedFn(() => {
-    history.push(
-      `/room?name=${userName}&host=${true}&topic=${meetingNameValue}&order=1&color=${color}&id=${getRandom()}`,
-    );
+    setMainLoadingValue(true);
+    setTimeout(() => {
+      history.push(
+        `/room?name=${userName}&host=${true}&topic=${meetingNameValue}&order=1&color=${color}&id=${getRandom()}`,
+      );
+      setMainLoadingValue(false);
+    }, 1000);
   });
   return (
-    <div className="join-container">
-      <h1 className="join-title">创建会议</h1>
-      <div className="join-info">
-        <div className="join-info-item">
-          <Input
-            onChange={(v) => {
-              setMeetingNameValue(v);
-            }}
-            style={{ width: 580 }}
-            allowClear
-            placeholder="会议主题"
-          />
+    <Spin
+      style={{
+        width: '100vw',
+      }}
+      dot
+      loading={mainLoadingValue}
+    >
+      <div className="join-container">
+        <h1 className="join-title">创建会议</h1>
+        <div className="join-info">
+          <div className="join-info-item">
+            <Input
+              onChange={(v) => {
+                setMeetingNameValue(v);
+              }}
+              style={{ width: 580 }}
+              allowClear
+              placeholder="会议主题"
+            />
+          </div>
+          <div className="join-info-item">
+            {' '}
+            <Input
+              style={{ width: 580 }}
+              allowClear
+              onChange={(v) => {
+                setUserName(v);
+              }}
+              placeholder="昵称(默认为用户名)"
+            />
+          </div>
         </div>
-        <div className="join-info-item">
-          {' '}
-          <Input
-            style={{ width: 580 }}
-            allowClear
-            onChange={(v) => {
-              setUserName(v);
+        <div id="videos_portal"></div>
+        <div className="video-icons">
+          <div
+            className="icon-item"
+            onClick={() => {
+              setShowMeMicroValue(!showMeMicroValue);
             }}
-            placeholder="昵称(默认为用户名)"
-          />
+          >
+            {!showMeMicroValue ? (
+              <NoMicroIcon
+                style={{
+                  color: '#f54a45',
+                }}
+              />
+            ) : (
+              <MicroIcon />
+            )}
+          </div>
+          <div
+            className="icon-item"
+            onClick={() => {
+              if (showMeVideoValue && localStream) {
+                localStream.getVideoTracks()[0].enabled = false;
+              } else if (!showMeVideoValue && localStream) {
+                localStream.getVideoTracks()[0].enabled = true;
+              }
+              setShowMeVideoValue(!showMeVideoValue);
+            }}
+          >
+            {!showMeVideoValue ? (
+              <NoVideoIcon
+                style={{
+                  color: '#f54a45',
+                }}
+              />
+            ) : (
+              <VideoIcon />
+            )}
+          </div>
+          <Button
+            type="outline"
+            disabled={meetingNameValue.length < 1 ? true : false}
+            onClick={onCreateMeeting}
+          >
+            立刻创建
+          </Button>
         </div>
       </div>
-      <div id="videos_portal"></div>
-      <div className="video-icons">
-        <div
-          className="icon-item"
-          onClick={() => {
-            setShowMeMicroValue(!showMeMicroValue);
-          }}
-        >
-          {!showMeMicroValue ? (
-            <NoMicroIcon
-              style={{
-                color: '#f54a45',
-              }}
-            />
-          ) : (
-            <MicroIcon />
-          )}
-        </div>
-        <div
-          className="icon-item"
-          onClick={() => {
-            if (showMeVideoValue && localStream) {
-              localStream.getVideoTracks()[0].enabled = false;
-            } else if (!showMeVideoValue && localStream) {
-              localStream.getVideoTracks()[0].enabled = true;
-            }
-            setShowMeVideoValue(!showMeVideoValue);
-          }}
-        >
-          {!showMeVideoValue ? (
-            <NoVideoIcon
-              style={{
-                color: '#f54a45',
-              }}
-            />
-          ) : (
-            <VideoIcon />
-          )}
-        </div>
-        <Button
-          type="outline"
-          disabled={meetingNameValue.length < 1 ? true : false}
-          onClick={onCreateMeeting}
-        >
-          立刻创建
-        </Button>
-      </div>
-    </div>
+    </Spin>
   );
 };
 export default JoinPage;

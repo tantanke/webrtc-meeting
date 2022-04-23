@@ -123,7 +123,7 @@ const PersonList: React.FC<IProps> = (props) => {
         </span>
       </div>
       <div className="person-list">
-        {videoAndMicroListValue.map((item) => {
+        {videoAndMicroListValue && videoAndMicroListValue.map((item) => {
           return (
             <div className="person-list-item" key={item.name}>
               <div className="info">

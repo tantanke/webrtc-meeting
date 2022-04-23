@@ -13,3 +13,7 @@ export {
   messageList,
   oneToOneMessageList
 } from './room/tools';
+export {
+  mainLoading,
+} from './home';
+

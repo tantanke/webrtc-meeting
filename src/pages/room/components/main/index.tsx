@@ -101,13 +101,16 @@ const MeetingMain: React.FC<IProps> = (props) => {
   const query = history.location.query!;
   useEffect(() => {
     const shakeMicro = () => {
-      for (const i of videoAndMicroListValue) {
-        if (i.micro) {
-          setTalkColor(i?.color || '');
-          setTalkName(i?.name || '');
-          setTalkIconName(i?.name || '');
-          return;
+      if (videoAndMicroListValue) {
+        for (const i of videoAndMicroListValue) {
+          if (i.micro) {
+            setTalkColor(i?.color || '');
+            setTalkName(i?.name || '');
+            setTalkIconName(i?.name || '');
+            return;
+          }
         }
+        
       }
       setTalkIconName('');
     };
@@ -143,9 +146,6 @@ const MeetingMain: React.FC<IProps> = (props) => {
         if (localStream) {
           getSmallInner();
         }
-      }
-      if (key === 'shareTag' || init) {
-        localStorage.getItem('shareTag') === '2' && setBeginShare(true);
       }
       if (key === 'oneToOneMessageList' || init) {
         const oneMessageList = JSON.parse(
@@ -223,38 +223,39 @@ const MeetingMain: React.FC<IProps> = (props) => {
           <div className="meeting-main-talking">
             <div className="title">正在讲话：{talkingIconName}</div>
             <div className="status">
-              {videoAndMicroListValue.map((item) => {
-                return (
-                  <div key={item.name}>
-                    <div className="line"></div>
-                    <div
-                      className="no-video"
-                      style={{
-                        display: item.video ? 'none' : 'flex',
-                      }}
-                    >
+              {videoAndMicroListValue &&
+                videoAndMicroListValue.map((item) => {
+                  return (
+                    <div key={item.name}>
+                      <div className="line"></div>
                       <div
-                        className="no-video-logo"
+                        className="no-video"
                         style={{
-                          background: '#' + item.color,
+                          display: item.video ? 'none' : 'flex',
                         }}
                       >
-                        {item.name?.substring
-                          ? item.name.substring(item.name.length - 2)
-                          : item.name}
+                        <div
+                          className="no-video-logo"
+                          style={{
+                            background: '#' + item.color,
+                          }}
+                        >
+                          {item.name?.substring
+                            ? item.name.substring(item.name.length - 2)
+                            : item.name}
+                        </div>
                       </div>
-                    </div>
-                    <div
-                      style={{
-                        display: !item.video ? 'none' : 'block',
-                      }}
-                      className="small-video-container"
-                    ></div>
+                      <div
+                        style={{
+                          display: !item.video ? 'none' : 'block',
+                        }}
+                        className="small-video-container"
+                      ></div>
 
-                    <span className="name">{item.name}</span>
-                  </div>
-                );
-              })}
+                      <span className="name">{item.name}</span>
+                    </div>
+                  );
+                })}
             </div>
           </div>
         </div>
