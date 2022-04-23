@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './index.less';
 import { showMeMicro, showMeVideo, MeetingName } from '@/store/index';
 import { ReactComponent as MicroIcon } from '@/images/micro.svg';
@@ -7,11 +7,22 @@ import { ReactComponent as VideoIcon } from '@/images/video.svg';
 import { ReactComponent as NoVideoIcon } from '@/images/no-video.svg';
 import { ReactComponent as PersonIcon } from '@/images/person.svg';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import ScreeShare from './components/screen-share'
+import ScreeShare from './components/screen-share';
 import EndModal from './components/endModal';
+import { history } from 'umi';
 interface IProps {
   setVideo: any;
 }
+const resetList = (value: { video: boolean; micro: boolean }) => {
+  const oldStatus = JSON.parse(localStorage.getItem('meetingInfo') || '[]');
+  oldStatus.personList = oldStatus.personList.map((item: any) => {
+    if ((item.name === history.location.query?.name)) {
+      return { ...item, ...value };
+    }
+    return item;
+  });
+  localStorage.setItem('meetingInfo', JSON.stringify(oldStatus));
+};
 const MeetingTools: React.FC<IProps> = (props) => {
   const showMeMicroValue = useRecoilValue<boolean>(showMeMicro);
   const showMeVideoValue = useRecoilValue<boolean>(showMeVideo);
@@ -22,6 +33,7 @@ const MeetingTools: React.FC<IProps> = (props) => {
       <div
         className="icon-item"
         onClick={() => {
+          resetList({ micro: !showMeMicroValue, video: showMeVideoValue });
           setShowMeMicroValue(!showMeMicroValue);
         }}
       >
@@ -43,6 +55,7 @@ const MeetingTools: React.FC<IProps> = (props) => {
           } else {
             props.setVideo(true);
           }
+          resetList({ micro: showMeMicroValue, video: !showMeVideoValue });
           setShowMeVideoValue(!showMeVideoValue);
         }}
       >
@@ -56,7 +69,7 @@ const MeetingTools: React.FC<IProps> = (props) => {
           <VideoIcon />
         )}
       </div>
-     
+
       <ScreeShare></ScreeShare>
       <div className="icon-item">
         <PersonIcon></PersonIcon>

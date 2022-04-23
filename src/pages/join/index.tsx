@@ -79,14 +79,14 @@ const JoinPage: React.FC<IProps> = (props) => {
             onChange={(v) => {
               setMeetNumberValue(v);
             }}
-            style={{ width: 350 }}
+            style={{ width: 580 }}
             allowClear
             placeholder="会议号"
           />
         </div>
         <div className="join-info-item">
           <Input
-            style={{ width: 350 }}
+            style={{ width: 580 }}
             allowClear
             placeholder="昵称(默认为用户名)"
           />

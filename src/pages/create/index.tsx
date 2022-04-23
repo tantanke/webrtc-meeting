@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './index.less';
 import { useMemoizedFn } from 'ahooks';
 import { Input } from '@arco-design/web-react';
+import { UserColors } from '@/const';
 import { ReactComponent as MicroIcon } from '@/images/micro.svg';
 import { ReactComponent as NoMicroIcon } from '@/images/no-micro.svg';
 import { ReactComponent as VideoIcon } from '@/images/video.svg';
@@ -39,6 +40,7 @@ export const getLocalPreviewAndInitRoomConnection = async (
       console.log(error);
     });
 };
+const color = UserColors[Math.ceil(Math.random() * 10)];
 export const showLocalVideoPreview = (stream: MediaStream) => {
   const videosContainer = document.getElementById('videos_portal')!;
   videosContainer.classList.add('videos_portal_styles');
@@ -65,6 +67,7 @@ const JoinPage: React.FC<IProps> = (props) => {
   const setShowMeMicroValue = useSetRecoilState<boolean>(showMeMicro);
   const meetingNameValue = useRecoilValue<string>(MeetingName);
   const setMeetingNameValue = useSetRecoilState<string>(MeetingName);
+  const [userName, setUserName] = useState('');
   useEffect(() => {
     getLocalPreviewAndInitRoomConnection();
     return () => {
@@ -73,7 +76,9 @@ const JoinPage: React.FC<IProps> = (props) => {
     };
   }, []);
   const onCreateMeeting = useMemoizedFn(() => {
-    history.push('/room');
+    history.push(
+      `/room?name=${userName}&host=${true}&topic=${meetingNameValue}&order=1&color=${color}`,
+    );
   });
   return (
     <div className="join-container">
@@ -84,7 +89,7 @@ const JoinPage: React.FC<IProps> = (props) => {
             onChange={(v) => {
               setMeetingNameValue(v);
             }}
-            style={{ width: 350 }}
+            style={{ width: 580 }}
             allowClear
             placeholder="会议主题"
           />
@@ -92,8 +97,11 @@ const JoinPage: React.FC<IProps> = (props) => {
         <div className="join-info-item">
           {' '}
           <Input
-            style={{ width: 350 }}
+            style={{ width: 580 }}
             allowClear
+            onChange={(v) => {
+              setUserName(v);
+            }}
             placeholder="昵称(默认为用户名)"
           />
         </div>

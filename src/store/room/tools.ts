@@ -32,3 +32,37 @@ export const selectVideoMode = atom<number>({
   key: 'selectVideoMode',
   default: 0,
 });
+// 记录数据
+// 会议室聊天记录
+export const messageList = atom<
+  {
+    name: string;
+    message: string;
+  }[]
+>({
+  key: 'messageList',
+  default: [],
+});
+// 单聊记录
+export const oneToOneMessageList = atom({
+  key: 'oneToOneMessageList',
+  default: {},
+});
+// 视频记录
+export const videoAndMicroList = atom<
+  {
+    name: string;
+    color: string;
+    isOwner: boolean;
+    micro: boolean;
+    video: boolean;
+  }[]
+>({
+  key: 'videoAndMicroList',
+  default: [],
+});
+// 记录会议的基本信息
+export const meetingInfo = atom({
+  key: 'meetingInfo',
+  default: {},
+});

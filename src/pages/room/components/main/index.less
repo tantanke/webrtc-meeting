@@ -15,9 +15,17 @@
       position: fixed;
       left: 400px;
       bottom: -15px;
+
       video {
         width: 140px;
         height: 110px;
+      }
+    }
+
+    .video_screen_share_preview_big {
+      video {
+        width: 1280px;
+        height: 720px;
       }
     }
 
@@ -32,23 +40,51 @@
 
     .meeting-main-talking {
       position: absolute;
-      right: 12px;
+      right: 6px;
       top: 20px;
       box-sizing: border-box;
-      display: flex;
-      align-items: center;
       width: 160px;
-      height: 32px;
       padding: 0 12px;
       border-radius: 6px;
       background-color: rgba(55, 60, 67, 0.8);
-      font-size: 12px;
-      word-break: keep-all;
       border: 1px solid transparent;
       line-height: 1.5;
       color: rgba(248, 249, 250, 0.6);
       font-weight: 500;
       margin-right: 4px;
+
+      .title {
+        font-size: 12px;
+        padding: 6px 0px;
+      }
+      .line{
+        background: #fff;
+        height: 1px;
+        width: 134px;
+      }
+      .name{
+        font-size: 10px;
+        color:#fff;
+        position: relative;
+        top: -16px;
+      }
+      .no-video,.video{
+        width: 134px;
+        border-radius: 4px;
+        height: 80px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .no-video-logo{
+        width: 60px;
+        height: 60px;
+        line-height:60px;
+        border-radius: 50%;
+        font-size: 16px;
+        color: #fff;
+      }
+
     }
 
     .videos_portal_styles_main {

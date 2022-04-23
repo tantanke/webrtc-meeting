@@ -7,4 +7,6 @@ export {
   showMeVideo,
   showMeMicroInit,
   showMeVideoInit,
+  videoAndMicroList,
+  messageList
 } from './room/tools';

@@ -29,6 +29,7 @@
     "react-dom": "17.x",
     "recoil": "^0.7.2",
     "simple-peer": "^9.11.1",
+    "socket.io-client": "^4.4.1",
     "umi": "^3.5.21"
   },
   "devDependencies": {
