@@ -15,5 +15,6 @@ export {
 } from './room/tools';
 export {
   mainLoading,
+  userLoginName
 } from './home';
 

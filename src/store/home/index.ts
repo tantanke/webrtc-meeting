@@ -4,3 +4,7 @@ export const mainLoading = atom<boolean>({
   key: 'mainLoading',
   default: false,
 });
+export const userLoginName = atom({
+  key: 'userName',
+  default: '',
+});

@@ -88,7 +88,7 @@ const JoinPage: React.FC<IProps> = (props) => {
           }&id=${meetingID}&order=1&color=${color}`,
         );
         setMainLoadingValue(false);
-      }, 1000);
+      }, 500);
     } else {
       Message.warning('请输入正确的九位数会议号！');
     }

@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import './index.less';
 import { useMemoizedFn } from 'ahooks';
-import { Input } from '@arco-design/web-react';
+import { Input, Message } from '@arco-design/web-react';
 import { UserColors } from '@/const';
 import { ReactComponent as MicroIcon } from '@/images/micro.svg';
 import { ReactComponent as NoMicroIcon } from '@/images/no-micro.svg';
 import { ReactComponent as VideoIcon } from '@/images/video.svg';
 import { ReactComponent as NoVideoIcon } from '@/images/no-video.svg';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { showMeMicro, showMeVideo, MeetingName } from '@/store/index';
+import {
+  showMeMicro,
+  showMeVideo,
+  MeetingName,
+  userLoginName,
+} from '@/store/index';
 import { history } from 'umi';
 import { Button, Spin } from '@arco-design/web-react';
 import { getRandom } from '@/utils/getRandom';
@@ -68,6 +73,7 @@ const JoinPage: React.FC<IProps> = (props) => {
   const setShowMeMicroValue = useSetRecoilState<boolean>(showMeMicro);
   const meetingNameValue = useRecoilValue<string>(MeetingName);
   const setMeetingNameValue = useSetRecoilState<string>(MeetingName);
+  const userLoginNameValue = useRecoilValue<string>(userLoginName);
   const [userName, setUserName] = useState('');
   const [mainLoadingValue, setMainLoadingValue] = useState<boolean>(false);
   useEffect(() => {
@@ -78,13 +84,30 @@ const JoinPage: React.FC<IProps> = (props) => {
     };
   }, []);
   const onCreateMeeting = useMemoizedFn(() => {
-    setMainLoadingValue(true);
-    setTimeout(() => {
-      history.push(
-        `/room?name=${userName}&host=${true}&topic=${meetingNameValue}&order=1&color=${color}&id=${getRandom()}`,
-      );
-      setMainLoadingValue(false);
-    }, 1000);
+    
+    if (meetingNameValue && !userLoginNameValue && !userName) {
+      Message.warning('请补全入会名称！');
+    } else if (!meetingNameValue) {
+      Message.warning('请补全会议主题！');
+    } else if (meetingNameValue && userName && userLoginNameValue) {
+      setMainLoadingValue(true);
+      setTimeout(() => {
+        history.push(
+          `/room?name=${userName}&host=${true}&topic=${meetingNameValue}&order=1&color=${color}&id=${getRandom()}`,
+        );
+        setMainLoadingValue(false);
+      }, 500);
+    } else if (meetingNameValue && (userName || userLoginNameValue)) {
+      setMainLoadingValue(true);
+      setTimeout(() => {
+        history.push(
+          `/room?name=${
+            userName || userLoginNameValue
+          }&host=${true}&topic=${meetingNameValue}&order=1&color=${color}&id=${getRandom()}`,
+        );
+        setMainLoadingValue(false);
+      }, 500);
+    }
   });
   return (
     <Spin
