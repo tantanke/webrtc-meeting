@@ -8,5 +8,8 @@ export {
   showMeMicroInit,
   showMeVideoInit,
   videoAndMicroList,
-  messageList
+  beginShare,
+  hasOneToOne,
+  messageList,
+  oneToOneMessageList
 } from './room/tools';

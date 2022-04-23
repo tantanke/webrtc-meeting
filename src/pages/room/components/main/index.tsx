@@ -5,10 +5,13 @@ import MeetingChat from '../chat';
 import MeetingTools from '../tools';
 import { useMemoizedFn, useInterval } from 'ahooks';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { history } from 'umi';
 import {
   showMeVideo,
+  beginShare,
   selectVideoMode,
   messageList,
+  oneToOneMessageList,
   videoAndMicroList,
 } from '@/store/index';
 interface IProps {}
@@ -42,7 +45,7 @@ const getLocalPreviewAndInitRoomConnection = async (
     });
 };
 let videoMark = null;
-export const showLocalVideoPreview = (stream: MediaStream) => {
+const showLocalVideoPreview = (stream: MediaStream) => {
   const videosContainer = document.getElementById('meeting-main-container')!;
   videosContainer.classList.add('videos_portal_styles_main');
   const videoInner = document.createElement('div');
@@ -59,13 +62,57 @@ export const showLocalVideoPreview = (stream: MediaStream) => {
   videoInner.appendChild(videoElement);
   videosContainer.appendChild(videoInner);
 };
+const getSmallInner = () => {
+  const videosContainers = document.querySelectorAll('.small-video-container');
+  if (videosContainers) {
+    for (const videosContainer of videosContainers) {
+      if (videosContainer.innerHTML == '') {
+        videosContainer.classList.add('videos_portal_styles_main');
+        const videoInner = document.createElement('div');
+        videoInner.classList.add('video_track_container');
+        const videoElement = document.createElement('video');
+        videoElement.classList.add('video_catcher');
+        videoElement.autoplay = true;
+        videoElement.muted = true;
+        videoElement.srcObject = localStream;
+        console.log(localStream);
+        //onloadedmetadata在指定视频/音频（audio/video）的元数据加载后触发。
+        videoElement.onloadedmetadata = () => {
+          videoElement.play();
+        };
+        videoInner.appendChild(videoElement);
+        videosContainer.appendChild(videoInner);
+      }
+    }
+  }
+};
 const MeetingMain: React.FC<IProps> = (props) => {
   const showMeVideoValue = useRecoilValue<boolean>(showMeVideo);
   const selectVideoModeValue = useRecoilValue<number>(selectVideoMode);
   const setSelectVideoModeValue = useSetRecoilState<number>(selectVideoMode);
+  const setBeginShare = useSetRecoilState<boolean>(beginShare);
   const setMessageListValue = useSetRecoilState(messageList);
   const setVideoAndMicroListValue = useSetRecoilState(videoAndMicroList);
   const videoAndMicroListValue = useRecoilValue(videoAndMicroList);
+  const [talkingColor, setTalkColor] = useState<string>('');
+  const [talkingName, setTalkName] = useState<string>('');
+  const [talkingIconName, setTalkIconName] = useState<string>('');
+  const setOneToOneMessageList = useSetRecoilState(oneToOneMessageList);
+  const query = history.location.query!;
+  useEffect(() => {
+    const shakeMicro = () => {
+      for (const i of videoAndMicroListValue) {
+        if (i.micro) {
+          setTalkColor(i?.color || '');
+          setTalkName(i?.name || '');
+          setTalkIconName(i?.name || '');
+          return;
+        }
+      }
+      setTalkIconName('');
+    };
+    shakeMicro();
+  }, [videoAndMicroListValue]);
   useEffect(() => {
     getLocalPreviewAndInitRoomConnection();
     return () => {
@@ -87,11 +134,24 @@ const MeetingMain: React.FC<IProps> = (props) => {
         const messageList = JSON.parse(
           localStorage.getItem('messageList') || '[]',
         );
-        setMessageListValue(messageList);
-      } else if (key === 'meetingInfo' || init) {
+        messageList && setMessageListValue(messageList[query.id as string]);
+      }
+      if (key === 'meetingInfo' || init) {
         const meetingInfo = localStorage.getItem('meetingInfo');
-        const list = JSON.parse(meetingInfo || '{}')?.personList;
-        setVideoAndMicroListValue(list);
+        const list = JSON.parse(meetingInfo || '{}');
+        list && setVideoAndMicroListValue(list[query.id as string]?.personList);
+        if (localStream) {
+          getSmallInner();
+        }
+      }
+      if (key === 'shareTag' || init) {
+        localStorage.getItem('shareTag') === '2' && setBeginShare(true);
+      }
+      if (key === 'oneToOneMessageList' || init) {
+        const oneMessageList = JSON.parse(
+          localStorage.getItem('oneToOneMessageList') || '[]',
+        );
+        setOneToOneMessageList(oneMessageList);
       }
     };
     const setFuc = (func: (key: string, init?: boolean) => void) => {
@@ -113,6 +173,9 @@ const MeetingMain: React.FC<IProps> = (props) => {
     // 本页面触发
     resetMethods('', true);
     setFuc(resetMethods);
+    setTimeout(() => {
+      getSmallInner();
+    }, 200);
     return () => {
       window.removeEventListener('setItemEvent', () => {
         console.log('done');
@@ -124,7 +187,7 @@ const MeetingMain: React.FC<IProps> = (props) => {
   }, []);
   const setVideo = useMemoizedFn((value: boolean) => {
     if (localStream) {
-      localStream.getVideoTracks()[0].enabled = value;
+      getSmallInner();
     }
   });
 
@@ -152,31 +215,44 @@ const MeetingMain: React.FC<IProps> = (props) => {
             className="no-video-logo"
             style={{
               display: !showMeVideoValue ? 'block' : 'none',
-              background: 'green',
+              background: '#' + talkingColor,
             }}
           >
-            达科
+            {talkingName.substring(talkingName.length - 2)}
           </div>
           <div className="meeting-main-talking">
-            <div className="title">正在讲话：谭达科</div>
+            <div className="title">正在讲话：{talkingIconName}</div>
             <div className="status">
               {videoAndMicroListValue.map((item) => {
                 return (
-                  <>
+                  <div key={item.name}>
                     <div className="line"></div>
-                    <div className="no-video">
+                    <div
+                      className="no-video"
+                      style={{
+                        display: item.video ? 'none' : 'flex',
+                      }}
+                    >
                       <div
                         className="no-video-logo"
                         style={{
                           background: '#' + item.color,
                         }}
                       >
-                        {item.name.substring(item.name.length - 2)}
+                        {item.name?.substring
+                          ? item.name.substring(item.name.length - 2)
+                          : item.name}
                       </div>
                     </div>
+                    <div
+                      style={{
+                        display: !item.video ? 'none' : 'block',
+                      }}
+                      className="small-video-container"
+                    ></div>
 
                     <span className="name">{item.name}</span>
-                  </>
+                  </div>
                 );
               })}
             </div>

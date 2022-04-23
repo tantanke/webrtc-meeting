@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import './index.less';
 import { ReactComponent as DeskIcon } from '@/images/desk.svg';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { selectVideoMode } from '@/store/index';
+import { selectVideoMode, beginShare } from '@/store/index';
 interface IProps {}
 const defaultConstraints: any = {
   audio: true,
@@ -13,6 +13,7 @@ const HomePage: React.FC<IProps> = (props) => {
   const [isScreenSharingActive, setIsScreenSharingActive] = useState(false);
   const [screenSharingStream, setScreenSharingStream] = useState<any>(null);
   const selectVideoModeValue = useRecoilValue<number>(selectVideoMode);
+  const selectbeginShare = useRecoilValue<boolean>(beginShare);
   const setSelectVideoModeValue = useSetRecoilState<number>(selectVideoMode);
   const handleScreenShareToggle = async () => {
     if (!isScreenSharingActive) {
@@ -24,14 +25,17 @@ const HomePage: React.FC<IProps> = (props) => {
       } catch (error) {
         console.log('获取共享屏幕的媒体流失败', error);
       }
+      console.log(stream);
       if (stream) {
         setScreenSharingStream(stream as any);
         setIsScreenSharingActive(true);
         stream.getVideoTracks()[0].addEventListener('ended', () => {
           setIsScreenSharingActive(false);
           setSelectVideoModeValue(0);
+          localStorage.setItem('shareTag', '0');
         });
         setSelectVideoModeValue(2);
+        localStorage.setItem('shareTag', '2');
       }
     } else {
       setIsScreenSharingActive(false);
@@ -46,9 +50,6 @@ const HomePage: React.FC<IProps> = (props) => {
     video.onloadedmetadata = () => {
       video.play();
     };
-    video.pause = () => {
-      console.log(1121);
-    };
   }, [screenSharingStream]);
   return (
     <div className="icon-item">
@@ -61,7 +62,6 @@ const HomePage: React.FC<IProps> = (props) => {
           if (selectVideoModeValue === 1) {
             setSelectVideoModeValue(2);
           }
-          console.log(selectVideoModeValue)
         }}
         className={`${
           selectVideoModeValue === 1

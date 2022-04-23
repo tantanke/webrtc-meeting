@@ -14,8 +14,9 @@ interface IProps {
   setVideo: any;
 }
 const resetList = (value: { video: boolean; micro: boolean }) => {
+  const query:any = history.location.query
   const oldStatus = JSON.parse(localStorage.getItem('meetingInfo') || '[]');
-  oldStatus.personList = oldStatus.personList.map((item: any) => {
+  oldStatus[query.id].personList = oldStatus[query.id].personList.map((item: any) => {
     if ((item.name === history.location.query?.name)) {
       return { ...item, ...value };
     }

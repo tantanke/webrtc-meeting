@@ -11,6 +11,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { showMeMicro, showMeVideo, MeetingName } from '@/store/index';
 import { history } from 'umi';
 import { Button } from '@arco-design/web-react';
+import { getRandom } from '@/utils/getRandom';
 const defaultConstraints: any = {
   audio: true,
   video: { width: '576', height: '324' },
@@ -77,7 +78,7 @@ const JoinPage: React.FC<IProps> = (props) => {
   }, []);
   const onCreateMeeting = useMemoizedFn(() => {
     history.push(
-      `/room?name=${userName}&host=${true}&topic=${meetingNameValue}&order=1&color=${color}`,
+      `/room?name=${userName}&host=${true}&topic=${meetingNameValue}&order=1&color=${color}&id=${getRandom()}`,
     );
   });
   return (
