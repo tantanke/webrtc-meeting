@@ -38,7 +38,7 @@ const LoginButtons: React.FC<IProps> = (props) => {
   const formRef = useRef<null | any>(null);
   const loginFormRef = useRef<null | any>(null);
   const [loginFormData, setLoginFormData] = useState<null | any>(null);
-  const [isLoginRight, setIsLoginRight] = useState(true);
+  const [isLoginRight, setIsLoginRight] = useState(false);
   const loginOut = () =>{
     setIsLoginRight(false)
   }
