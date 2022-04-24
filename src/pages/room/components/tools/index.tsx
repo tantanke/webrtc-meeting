@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import './index.less';
-import { showMeMicro, showMeVideo, MeetingName } from '@/store/index';
+import {
+  showMeMicro,
+  showMeVideo,
+  MeetingName,
+  videoAndMicroList,
+} from '@/store/index';
 import { ReactComponent as MicroIcon } from '@/images/micro.svg';
 import { ReactComponent as NoMicroIcon } from '@/images/no-micro.svg';
 import { ReactComponent as VideoIcon } from '@/images/video.svg';
@@ -14,19 +19,22 @@ interface IProps {
   setVideo: any;
 }
 const resetList = (value: { video: boolean; micro: boolean }) => {
-  const query:any = history.location.query
+  const query: any = history.location.query;
   const oldStatus = JSON.parse(localStorage.getItem('meetingInfo') || '[]');
-  oldStatus[query.id].personList = oldStatus[query.id].personList.map((item: any) => {
-    if ((item.name === history.location.query?.name)) {
-      return { ...item, ...value };
-    }
-    return item;
-  });
+  oldStatus[query.id].personList = oldStatus[query.id].personList.map(
+    (item: any) => {
+      if (item.name === history.location.query?.name) {
+        return { ...item, ...value };
+      }
+      return item;
+    },
+  );
   localStorage.setItem('meetingInfo', JSON.stringify(oldStatus));
 };
 const MeetingTools: React.FC<IProps> = (props) => {
   const showMeMicroValue = useRecoilValue<boolean>(showMeMicro);
   const showMeVideoValue = useRecoilValue<boolean>(showMeVideo);
+  const videoAndMicroListValue = useRecoilValue(videoAndMicroList);
   const setShowMeVideoValue = useSetRecoilState<boolean>(showMeVideo);
   const setShowMeMicroValue = useSetRecoilState<boolean>(showMeMicro);
   return (
@@ -74,7 +82,9 @@ const MeetingTools: React.FC<IProps> = (props) => {
       <ScreeShare></ScreeShare>
       <div className="icon-item">
         <PersonIcon></PersonIcon>
-        <span className="person-count">2</span>
+        <span className="person-count">
+          {videoAndMicroListValue?.length || 0}
+        </span>
       </div>
       <div className="icon-item">
         <EndModal></EndModal>

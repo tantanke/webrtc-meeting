@@ -45,6 +45,7 @@ const Room: React.FC<IProps> = (props) => {
     let meetings: any = JSON.parse(localStorage.getItem('meetingInfo') || '{}');
     let meetingFlag = JSON.parse(localStorage.getItem('meetingFlag') || '{}');
     if (querys?.host === 'true') {
+     
       !meetingFlag[querys.id] && (meetingFlag[querys.id] = {});
       !meetings[querys.id] &&
         (meetings[querys.id] = {
@@ -61,6 +62,7 @@ const Room: React.FC<IProps> = (props) => {
             },
           ],
         });
+        meetingFlag[querys.id].isAlive = true
     } else if (querys?.host === 'false') {
       !meetingFlag[querys.id] && (meetingFlag[querys.id] = {});
       !meetingFlag[querys.id][querys.name] &&
@@ -75,7 +77,6 @@ const Room: React.FC<IProps> = (props) => {
           },
         ]);
     }
-    console.log(querys.id, querys?.name);
     meetingFlag[querys.id][querys?.name] = true;
     localStorage.setItem('meetingFlag', JSON.stringify(meetingFlag));
     localStorage.setItem('meetingInfo', JSON.stringify(meetings));

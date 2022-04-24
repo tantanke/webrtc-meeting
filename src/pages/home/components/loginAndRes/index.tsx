@@ -5,16 +5,13 @@ import {
   Form,
   Input,
   Message,
-  Dropdown,
-  Menu,
-  Space,
   Button,
   Modal,
 } from '@arco-design/web-react';
-import { IconBook, IconToLeft } from '@arco-design/web-react/icon';
 import { useMemoizedFn } from 'ahooks';
 import { useSetRecoilState } from 'recoil';
 import { userLoginName } from '@/store/index';
+import UserSeting from '../userSeting';
 const FormItem = Form.Item;
 interface IProps {}
 const formItemLayout = {
@@ -41,24 +38,10 @@ const LoginButtons: React.FC<IProps> = (props) => {
   const formRef = useRef<null | any>(null);
   const loginFormRef = useRef<null | any>(null);
   const [loginFormData, setLoginFormData] = useState<null | any>(null);
-  const [isLoginRight, setIsLoginRight] = useState(false);
-  const dropList = (
-    <Menu>
-      <Menu.Item key="date">
-        <IconBook style={{ marginRight: 10 }} />
-        会议日程
-      </Menu.Item>
-      <Menu.Item
-        onClick={() => {
-          setIsLoginRight(false);
-        }}
-        key="exit"
-      >
-        <IconToLeft style={{ marginRight: 10 }} />
-        退出登录
-      </Menu.Item>
-    </Menu>
-  );
+  const [isLoginRight, setIsLoginRight] = useState(true);
+  const loginOut = () =>{
+    setIsLoginRight(false)
+  }
   const onValuesChange = (changeValue: unknown, values: unknown) => {
     setFormData(values);
   };
@@ -222,11 +205,7 @@ const LoginButtons: React.FC<IProps> = (props) => {
           </Modal>
         </>
       ) : (
-        <Space>
-          <Dropdown droplist={dropList} position="bottom">
-            <div className="login-icon">达科</div>
-          </Dropdown>
-        </Space>
+        <UserSeting loginOut={loginOut}></UserSeting>
       )}
     </div>
   );

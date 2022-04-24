@@ -98,7 +98,7 @@ const MeetingMain: React.FC<IProps> = (props) => {
   const [talkingName, setTalkName] = useState<string>('');
   const [talkingIconName, setTalkIconName] = useState<string>('');
   const setOneToOneMessageList = useSetRecoilState(oneToOneMessageList);
-  const query = history.location.query!;
+  const query: any = history.location.query!;
   useEffect(() => {
     const shakeMicro = () => {
       if (videoAndMicroListValue) {
@@ -110,7 +110,6 @@ const MeetingMain: React.FC<IProps> = (props) => {
             return;
           }
         }
-        
       }
       setTalkIconName('');
     };
@@ -152,6 +151,19 @@ const MeetingMain: React.FC<IProps> = (props) => {
           localStorage.getItem('oneToOneMessageList') || '[]',
         );
         setOneToOneMessageList(oneMessageList);
+      }
+      if (key === 'meetingFlag') {
+        const meetingFlag = JSON.parse(
+          localStorage.getItem('meetingFlag') || '{}',
+        );
+        if (!meetingFlag[query?.id]?.isAlive) {
+          if (
+            meetingFlag[query?.id]?.isAlive === false &&
+            history.location.pathname !== '/end'
+          ) {
+            history.push('/end?finish=1');
+          }
+        }
       }
     };
     const setFuc = (func: (key: string, init?: boolean) => void) => {

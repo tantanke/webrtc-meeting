@@ -15,7 +15,8 @@ import {
   userLoginName,
 } from '@/store/index';
 import { history } from 'umi';
-import { Button, Spin } from '@arco-design/web-react';
+import { IconPlus } from '@arco-design/web-react/icon';
+import { Button, Spin, Tag } from '@arco-design/web-react';
 import { getRandom } from '@/utils/getRandom';
 const defaultConstraints: any = {
   audio: true,
@@ -69,6 +70,7 @@ interface IProps {}
 const JoinPage: React.FC<IProps> = (props) => {
   const showMeMicroValue = useRecoilValue<boolean>(showMeMicro);
   const showMeVideoValue = useRecoilValue<boolean>(showMeVideo);
+  const [tags, setTags] = useState(['']);
   const setShowMeVideoValue = useSetRecoilState<boolean>(showMeVideo);
   const setShowMeMicroValue = useSetRecoilState<boolean>(showMeMicro);
   const meetingNameValue = useRecoilValue<string>(MeetingName);
@@ -84,7 +86,6 @@ const JoinPage: React.FC<IProps> = (props) => {
     };
   }, []);
   const onCreateMeeting = useMemoizedFn(() => {
-    
     if (meetingNameValue && !userLoginNameValue && !userName) {
       Message.warning('请补全入会名称！');
     } else if (!meetingNameValue) {
@@ -109,6 +110,20 @@ const JoinPage: React.FC<IProps> = (props) => {
       }, 500);
     }
   });
+  const removeTag = (removeTag: string) => {
+    const newTags = tags.filter((tag) => tag !== removeTag);
+    setTags(newTags);
+  };
+  const addTag = () => {
+    if (inputValue) {
+      tags.push(inputValue);
+      setTags(tags);
+      setInputValue('');
+    }
+    setShowInput(false);
+  };
+  const [showInput, setShowInput] = useState(false);
+  const [inputValue, setInputValue] = useState('');
   return (
     <Spin
       style={{
@@ -140,6 +155,43 @@ const JoinPage: React.FC<IProps> = (props) => {
               }}
               placeholder="昵称(默认为用户名)"
             />
+          </div>
+          <div className="join-info-item">
+            {tags.map((tag, index) => {
+              return (
+                <Tag
+                  key={tag}
+                  closable={index !== 0}
+                  onClose={() => removeTag(tag)}
+                >
+                  {tag}
+                </Tag>
+              );
+            })}
+            {showInput ? (
+              <Input
+                autoFocus
+                size="mini"
+                value={inputValue}
+                style={{ width: 84 }}
+                onPressEnter={addTag}
+                onBlur={addTag}
+                onChange={setInputValue}
+              />
+            ) : (
+              <Tag
+                icon={<IconPlus />}
+                style={{
+                  width: 84,
+                  backgroundColor: '#ffffff',
+                  border: '1px dashed var(--color-fill-3)',
+                  cursor: 'pointer',
+                }}
+                onClick={() => setShowInput(true)}
+              >
+                会议标签
+              </Tag>
+            )}
           </div>
         </div>
         <div id="videos_portal"></div>
